@@ -24,14 +24,11 @@ def add_product(db_connection, product: Product):
         cursor = db_connection.cursor()
         # This is a potential SQL injection as the product nme is potentially directly passed from the user.
         # replace with 
-        # cursor.execute("INSERT INTO products (id, title) VALUES (NULL, ?)", (product.name, ))
-        cursor.execute("INSERT INTO products (id, title) VALUES (NULL, '" + product.name+"');")
+        cursor.execute("INSERT INTO products (id, title) VALUES (NULL, ?)", (product.name, ))
         db_connection.commit()
         return True
     # a bare exception fails to captures the exact exceptions (and print it). The code should rather
     # catch specific exceptions.
     # https://docs.datadoghq.com/code_analysis/static_analysis_rules/python-best-practices/no-bare-except/
     # replace with
-    # # except sqlite3.IntegrityError:
-    except:
-        return False
+    except sqlite3.IntegrityError:
